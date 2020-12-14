@@ -1,16 +1,11 @@
 package cs526.Project;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
-import java.util.Set;
 
 public class Project {
   /**
@@ -19,11 +14,61 @@ public class Project {
   public static final String GRAPH_FILE_NAME = "src/cs526/Project/graph_input.txt";
   public static final String DIRECT_DISTANCES_FILENAME = "src/cs526/Project/direct_distance.txt";
 
-  public static Map<String,Integer> getArrayFromFile(String filePath) {
+  // build two dimensional array of the node connection values skipping the letters row and columns from the graph_input file
+  public static String[][] getNodeConnectionMatrix(String filePath) {
+    String lineFromFile = "";
+    String [] distances = null;
+    int row = 0;
+    int size = 0;
+    String[][] connectionMatrix = null;
+
+    try {
+      Scanner fileInput = new Scanner (new File(filePath));
+
+      // Get one line at a time and repeat the same process for all expressions in the input file.
+      while (fileInput.hasNextLine()) {
+
+        // Get the next line
+        lineFromFile = fileInput.nextLine();
+        //remove the white space split the string lineFromFile using spaces...produces an Array of Strings
+        distances = lineFromFile.split("\\s+");
+
+        // Instantiate the connection n x n matrix array where n is the number of the lines in the file
+        if (connectionMatrix == null) {
+          size = distances.length;
+          connectionMatrix = new String[size][size];
+        }
+
+        // loop through the columns in the current row of the distances Array
+        for (int col = 0; col < size; col++){
+          // set the current element in the matrix to the distance from the distances array
+          connectionMatrix[row][col] = distances[col];
+        }
+        // increment the row counter
+        row++;
+      }
+    }
+    // File not found
+    catch (FileNotFoundException ex) {
+      System.err.println(ex.getMessage() + ": File not found. Exiting.");
+      System.exit(0);
+    }
+
+    // Something else went wrong. Catch all
+    catch (Exception ex) {
+      System.err.println(ex.getMessage());
+      ex.printStackTrace();
+      System.exit(0);
+    }
+    return connectionMatrix;
+  }
+
+  public static Map<String,Integer> getMapOfNodesFromFile(String filePath) {
     String lineFromFile = "";
     String [] tokens = null;
     Map<String,Integer> mapOfTokens = new HashMap<>();
-    int count = 0;
+    Map<String,Integer> directDistanceIndexMap = new HashMap<>();
+    int index = 0;
 
     try {
       Scanner fileInput = new Scanner (new File(filePath));
@@ -36,7 +81,9 @@ public class Project {
 
         //Split the string fromFile using spaces...produces an Array of Strings
         tokens = lineFromFile.split("\\s+");
+
         mapOfTokens.put(tokens[0],Integer.parseInt(tokens[1]));
+        directDistanceIndexMap.put(tokens[0], index++);
        }
     }
     // File not found
@@ -68,42 +115,18 @@ public class Project {
     List<String> nodeNames = new ArrayList<>();
     List<Integer> directDistances = new ArrayList<>();
     Map<String, Integer> mapOfNodes = new HashMap<>();
+    String[][] connectionMatrix = null;
     // read in direct_distance.txt
-    mapOfNodes = getArrayFromFile(DIRECT_DISTANCES_FILENAME);
+    mapOfNodes = getMapOfNodesFromFile(DIRECT_DISTANCES_FILENAME);
+    // Map the keys to node Names List
     nodeNames = new ArrayList<>(mapOfNodes.keySet());
+    //map the values to directDistances list
+    directDistances = new ArrayList<>(mapOfNodes.values());
+    connectionMatrix = getNodeConnectionMatrix(GRAPH_FILE_NAME);
 
 
-/**
- * OLD READ FILE START DIRECT_DISTANCE
- */
-    FileInputStream fin1 = new FileInputStream(DIRECT_DISTANCES_FILENAME);
-    InputStreamReader reader1 = new InputStreamReader(fin1);
-    BufferedReader buffReader1 = new BufferedReader(reader1);
-    String strTmp1 = "";
-    while ((strTmp1 = buffReader1.readLine()) != null) {
-      int d = Integer.parseInt(strTmp1.replaceAll("[A-Z]+\\s", ""));
-      directDistances.add(d); // test input
-      }
-    buffReader1.close();
-/**
- * OLD READ FILE END
- */
 
 
-    /**
-     *Input graph_input.txt, store weight into list
-     */
-    int n = mapOfNodes.size(); //number of nodeNames
-    String[][] weight = new String[n + 1][n + 1];
-    int index = 0;
-    FileInputStream fin2 = new FileInputStream(GRAPH_FILE_NAME);
-    InputStreamReader reader2 = new InputStreamReader(fin2);
-    BufferedReader buffReader2 = new BufferedReader(reader2);
-    String strTmp2 = "";
-    while ((strTmp2 = buffReader2.readLine()) != null) {
-      weight[index] = strTmp2.split("\\s+");
-      index++;
-    }
 
 
     System.out.println("Type start node represented by a single uppercase letter:");
@@ -116,9 +139,9 @@ public class Project {
     }
     //test input
     //System.out.println(start_node);
-    Graph.get_shortest_path(start_node, nodeNames, directDistances, weight);
+    Graph.get_shortest_path(start_node, nodeNames, directDistances, connectionMatrix);
     System.out.println();
-    Graph.get_shortest_path_2(start_node, nodeNames, directDistances, weight);
-    //System.out.println(Algorithm1.get_adjacent_node_2(start_node, nodeNames, directDistances, weight));
+    Graph.get_shortest_path_2(start_node, nodeNames, directDistances, connectionMatrix);
+    //System.out.println(Algorithm1.get_adjacent_node_2(start_node, nodeNames, directDistances, connectionMatrix));
   }
 }

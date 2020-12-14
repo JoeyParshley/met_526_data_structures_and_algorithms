@@ -7,44 +7,42 @@ public class Graph {
   /**
    * Algorithm 1 Static method to get the most adjacent node of given node
    *
-   * @param s Given node
-   * @param v Vertex list
-   * @param d Dd list
-   * @param w Weight matrix
+   * @param currentNode Given node
+   * @param nodeNames Vertex list
+   * @param directDistances Dd list
+   * @param connectionMatrix Weight matrix
    * @return possible adjacent nodes due to rule of algorithm1
    */
-  public static String get_adjacent_node(String s, List<String> v, List<Integer> d, String[][] w) {
-    String this_node = s;
-    List<String> vertex = v;
-    List<Integer> dd = d;
-    String[][] weight = w;
-    int n = dd.size(); // number of nodes
+  public static String get_adjacent_node(String currentNode, List<String> nodeNames, List<Integer> directDistances, String[][] connectionMatrix) {
+    int n = directDistances.size(); // number of nodes
 
     // get index of this node
-    int index = vertex.indexOf(this_node);
+    int index = nodeNames.indexOf(currentNode);
 
-    // find possible adjacent nodes
-    List<String> p_nodes = new ArrayList<>(); // create a temp list to store possible adjacent nodes
+    // Create a list of adjacent nodes
+    List<String> adjacentNodes = new ArrayList<>();
     for (int i = 1; i <= n; i++) {
-      if (Integer.parseInt(weight[index + 1][i]) > 0) {
-        p_nodes.add(weight[0][i]);
-        // System.out.println("Possible node: " + weight[0][i]);
+      if (Integer.parseInt(connectionMatrix[index + 1][i]) > 0) {
+        adjacentNodes.add(connectionMatrix[0][i]);
       }
     }
-    // get the adjacent node due to dd(v)
-    int Temp_dd = 99999;
-    for (int j = 0; j < p_nodes.size(); j++) {
-      String p_node = p_nodes.get(j);
-      int index_2 = vertex.indexOf(p_node);
-      int p_dd = dd.get(index_2);
-      if (p_dd < Temp_dd) {
-        Temp_dd = p_dd;
+
+    // set the closest distance to Z to a rediculously high value
+    int closestNodeToZ = Integer.MAX_VALUE;
+
+    // loop over the adjacent nodes and find the one closest to Z
+    for (int j = 0; j < adjacentNodes.size(); j++) {
+      String currentAdjacentNode = adjacentNodes.get(j);
+      int indexOfCurrentAdjacentNode = nodeNames.indexOf(currentAdjacentNode);
+      int currentAdjacentNodeDirectDistance = directDistances.get(indexOfCurrentAdjacentNode);
+      if (currentAdjacentNodeDirectDistance < closestNodeToZ) {
+        closestNodeToZ = currentAdjacentNodeDirectDistance;
       }
     }
 
     // return the most adjacent node
-    int index_3 = dd.indexOf(Temp_dd);
-    return vertex.get(index_3);
+    int indexClosestToZ = directDistances.indexOf(closestNodeToZ);
+    return nodeNames.get(indexClosestToZ);
   }
 
   /**
@@ -56,8 +54,7 @@ public class Graph {
    * @param w Weight matrix
    * @return possible adjacent nodes due to rule of algorithm1
    */
-  public static String get_adjacent_node_2(
-      String s, List<String> v, List<Integer> d, String[][] w) {
+  public static String get_adjacent_node_2(String s, List<String> v, List<Integer> d, String[][] w) {
     String this_node = s;
     List<String> vertex = v;
     List<Integer> dd = d;
