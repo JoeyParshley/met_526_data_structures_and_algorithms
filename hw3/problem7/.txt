@@ -1,0 +1,74 @@
+Assignment
+
+When you insert into a binary tree,
+- find the root node
+- if we wanted to insert say 68
+- start at the root, is 68 > or < 44 (root node)
+- if is less than we go left
+- if it more we go right
+- then ask the same question at every single node
+- when cannot go any further attach to the that node
+
+Code importing does alot of this already
+- not alot of code
+- two methods * one given one made - about 18 lines of code
+
+
+* have to build tree recursively
+
+
+
+What is IntBST Inheriting?
+ - setLeft / setRight or addLeft / addRight
+
+
+Hint:
+ - Split the given array into three parts
+    - leftSubarray
+    - middle node
+    - rightSubarray
+
+ -  Build a binary tree from each subarray.
+    - build leftSubTree from leftSubarray
+    - build rightSubTree from rightSubarray
+    - when you build each tree you do it recursively by invoking itself
+
+ -  combine leftSubTree, middle node, and rightSubtree to make a binary tree
+ - may have to study other programs in the nodeTree package
+ - if not sure or get stuck
+    - Solve this with a loop
+    - save it to the side
+    - then build recursive version from a loop verion
+
+
+Use the website to create a helper method to create a signature with the start and and of the subarrays?
+
+
+
+
+
+HW4_7
+create a HashMap instance myMap
+create an ArrayList instance myArrayList
+create a LinkedList instance myLinkedList
+Repeat the following 10 times and calculate average total insertion time and average total
+search time for each data structure
+generate 100,000 random integers in the range [1, 1,000,000] and store them in the
+array of integers insertKeys[ ]
+// begin with empty myHap, myArrayList, and myLinkedList each time
+// Insert keys one at a time but measure only the total time (not individual insert
+// time)
+// Use put method for HashMap
+// Use add method for ArrayList and LinkedList
+insert all keys in insertKeys [ ] into myMap and measure the total insert time
+insert all keys in insertKeys [ ] into  myArrayList and measure the total insert time
+insert all keys in insertKeys [ ] into myLinkedList and measure the total insert time
+generate 100,000 random integers in the range [1, 2,000,000] and store them in the
+array searchKeys[ ].
+// Search keys one at a time but measure only total time (not individual search
+// time)
+// Use containsKey method for HashMap
+// Use contains method for ArrayList and Linked List
+search myMap for all keys in searchKeys[ ] and measure the total search time
+search myArrayList for all keys in searchKeys[ ] and measure the total search time
+search myLinkedList for all keys in searchKeys[ ] and measure the total search time
