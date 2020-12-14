@@ -1,8 +1,7 @@
 package cs526.termProject;
 
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 
 public class ClosestNode {
@@ -26,6 +25,7 @@ public class ClosestNode {
     System.out.println();
     path.add(node);
   }
+
   public void showShortestDirectPath(String node){
     ArrayList<String> path = new ArrayList<>();
     System.out.printf("Shortest path: %s",node);
@@ -42,7 +42,7 @@ public class ClosestNode {
     ArrayList<String> adjacentNodes = new ArrayList<>();
     for (int i = 0; i < adjacencyMatrix.length; i++){
       if (adjacencyMatrix[nodeIndex][i] != 0){
-        adjacentNodes.add(node);
+        adjacentNodes.add(getNodeLetterByIndex(i));
       }
     }
     return adjacentNodes;
@@ -86,6 +86,7 @@ public class ClosestNode {
 
     return closestDirectNodeToZ;
   }
+
 
   public String getClosestNode(String node){
     int nodeIndex = indexMap.get(node);
